@@ -73,7 +73,53 @@ function selectChoiceAnswer(selectedIndex, optionText) {
         answer: optionText + mark
     });
 
+    if ((q.id === "1" || q.id === "2") && selectedIndex !== q.correct) {
+        failEarly();
+        return;
+    }
+
     nextStep();
+}
+
+async function failEarly() {
+    clearInterval(timerInterval);
+    document.getElementById("quiz-screen").classList.add("hidden");
+    document.getElementById("result-screen").classList.remove("hidden");
+
+    document.getElementById("final-score").textContent = "НЕ СДАНО";
+    document.getElementById("result-status").textContent = "Тест завершён и не сдан. Вы не подходите по минимальным критериям отбора (требуется 10+ игровой уровень и возраст от 15 лет).";
+
+    const timeSpent = document.getElementById("timer").textContent.replace("Время: ", "");
+    const statusText = "НЕ СДАНО (Отсев на " + (currentQuestion + 1) + "-м вопросе)";
+
+    let report = "=== ОТЧЁТ О ПРОХОЖДЕНИИ ТЕСТА В УСБ (05 СЕРВЕР) ===\n";
+    report += "Затрачено времени: " + timeSpent + "\n";
+    report += "Статус: " + statusText + "\n";
+    report += "==================================================\n\n";
+
+    userAnswers.forEach(item => {
+        report += item.question + "\nОтвет: " + item.answer + "\n\n";
+    });
+    document.getElementById("report-text").textContent = report;
+
+    if (GOOGLE_SHEET_URL) {
+        try {
+            await fetch(GOOGLE_SHEET_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "text/plain" },
+                body: JSON.stringify({
+                    nickname: "Отсев_вопрос_" + (currentQuestion + 1),
+                    score: score + " / " + totalGradable,
+                    status: statusText,
+                    time: timeSpent,
+                    answers: userAnswers
+                })
+            });
+        } catch (e) {
+            console.error("Ошибка отправки отсеянной анкеты:", e);
+        }
+    }
 }
 
 function submitTextAnswer() {
@@ -147,21 +193,10 @@ async function finishQuiz() {
                 })
             });
             document.getElementById("result-status").textContent = passed 
-                ? "Тестовая часть пройдена! Ваши ответы автоматически записаны в таблицу проверяющих." 
-                : "Тест завершён (набрано меньше " + minPassScore + " баллов). Результат записан в таблицу.";
+                ? "Тестовая часть пройдена! Ваши ответы автоматически отправлены проверяющим." 
+                : "Тест завершён (набрано меньше " + minPassScore + " баллов). Результат отправлен проверяющим.";
         } catch (e) {
-            document.getElementById("result-status").textContent = "Не удалось отправить автоматически. Скопируйте отчёт ниже и отправьте проверяющему вручную.";
+            document.getElementById("result-status").textContent = "Произошла ошибка при отправке анкеты. Проверьте интернет-соединение и попробуйте снова.";
         }
-    } else {
-        document.getElementById("result-status").textContent = passed 
-            ? "Тестовая часть пройдена! Скопируйте отчёт ниже и отправьте проверяющему." 
-            : "Тестовая часть не пройдена (набрано меньше " + minPassScore + " баллов).";
     }
-}
-
-function copyReport() {
-    const text = document.getElementById("report-text").textContent;
-    navigator.clipboard.writeText(text).then(() => {
-        alert("Полный отчёт со всеми ответами скопирован!");
-    });
 }
