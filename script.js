@@ -1,4 +1,4 @@
-const GOOGLE_SHEET_URL = "https://google.com";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyxXLbjh3sDZUA9tL4wV3hf0mICNi56zkv9XttIXkMvKyeLPhQUaL9zJkY1rlKtd4qmHA/exec";
 
 let currentQuestion = 0;
 let score = 0;
