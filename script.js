@@ -1,6 +1,4 @@
-// === ВСТАВЬТЕ ВАШУ ССЫЛКУ ИЗ GOOGLE APPS SCRIPT НИЖЕ ===
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyxXLbjh3sDZUA9tL4wV3hf0mICNi56zkv9XttIXkMvKyeLPhQUaL9zJkY1rlKtd4qmHA/exec"; 
-// ======================================================
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyxXLbjh3sDZUA9tL4wV3hf0mICNi56zkv9XttIXkMvKyeLPhQUaL9zJkY1rlKtd4qmHA/exec";
 
 let currentQuestion = 0;
 let score = 0;
@@ -117,7 +115,6 @@ async function finishQuiz() {
     const statusText = passed ? "ДОПУЩЕН К ПРОВЕРКЕ ЗАДАЧ" : "НЕ СДАНО";
     const timeSpent = document.getElementById("timer").textContent.replace("Время: ", "");
 
-    // Достаем ник игрока из 4-го вопроса для отдельного столбца в таблице
     const nickItem = userAnswers.find(item => item.id === "4");
     const playerNick = nickItem ? nickItem.answer : "Не указан";
 
@@ -134,7 +131,6 @@ async function finishQuiz() {
     
     document.getElementById("report-text").textContent = report;
 
-    // Отправка в Google Таблицу
     if (GOOGLE_SHEET_URL) {
         document.getElementById("result-status").textContent = "Сохраняем ваши ответы в таблицу УСБ...";
         try {
