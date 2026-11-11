@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Тест в УСБ Русь мобайл 05</title>
-    <!-- Подключаем файл со стилями -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,39 +15,41 @@
     <div class="container">
         <!-- 1. Стартовый экран -->
         <div id="start-screen">
-            <div class="form-group">
-                <label for="nickname">Ваш игровой Nick_Name:</label>
-                <input type="text" id="nickname" placeholder="Например: Ivan_Ivanov" required>
-            </div>
-            <div class="form-group">
-                <label for="server">Выберите сервер:</label>
-                <select id="server">
-                    <option value="Сервер #1 (Москва)">Сервер #1 (Москва)</option>
-                    <option value="Сервер #2 (Санкт-Петербург)">Сервер #2 (Санкт-Петербург)</option>
-                </select>
-            </div>
+            <p class="intro-text">
+                Добро пожаловать на тестирование кандидатов в Управление собственной безопасности (05 сервер).<br><br>
+                Тест состоит из <b>43 вопросов</b>: анкетная часть, проверка знаний RP, ФП, ПК, УК, КоАП, ОЗ и 8 ситуационных задач.<br><br>
+                В конце система автоматически подсчитает баллы за тестовую часть и сформирует полный отчёт с вашими письменными ответами для передачи проверяющему.
+            </p>
             <button class="btn" onclick="startQuiz()">Начать тестирование</button>
         </div>
 
         <!-- 2. Экран вопросов -->
         <div id="quiz-screen" class="hidden">
             <div class="quiz-header">
-                <span id="question-counter">Вопрос 1 из 5</span>
+                <span id="question-counter">Вопрос 1 из 43</span>
                 <span id="timer">Время: 00:00</span>
             </div>
             <div class="question-text" id="question-text">Текст вопроса</div>
+            
+            <!-- Варианты с кнопками -->
             <div class="options" id="options-container"></div>
+
+            <!-- Поле для свободного текста -->
+            <div id="text-input-container" class="hidden">
+                <textarea id="text-answer" rows="4" placeholder="Введите ваш ответ здесь..."></textarea>
+                <button class="btn" style="margin-top: 15px;" onclick="submitTextAnswer()">Далее</button>
+            </div>
         </div>
 
         <!-- 3. Экран результатов -->
         <div id="result-screen" class="hidden result-box">
             <h2>Тестирование завершено!</h2>
-            <div class="score" id="final-score">0 / 5</div>
+            <div class="score" id="final-score">0 / 26</div>
             <p id="result-status" class="status-text"></p>
             
             <div class="report-card" id="report-text"></div>
             
-            <button class="btn" onclick="copyReport()">Скопировать отчет для администрации</button>
+            <button class="btn" onclick="copyReport()">Скопировать полный отчёт для проверяющего</button>
             <button class="btn btn-secondary" onclick="location.reload()">Пройти заново</button>
         </div>
     </div>
@@ -57,7 +58,6 @@
         2026 Любительский проект Wolkov07, не связано с "Русь мобайл", а так же Rockstar Games.
     </footer>
 
-    <!-- Подключаем файл с логикой теста -->
     <script src="script.js"></script>
 </body>
 </html>
