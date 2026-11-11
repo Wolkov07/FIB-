@@ -1,0 +1,193 @@
+:root {
+    --bg-color: #0f1117;
+    --card-bg: #181b24;
+    --accent: #e63946;
+    --accent-hover: #d62839;
+    --text-main: #f1faee;
+    --text-muted: #a8b2d1;
+    --border-color: #2a2f3d;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    align-items: center;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin: 20px 0 30px;
+}
+
+.logo {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.logo span {
+    color: var(--accent);
+}
+
+.subtitle {
+    color: var(--text-muted);
+    margin-top: 8px;
+    font-size: 1rem;
+}
+
+.container {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 650px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Форма входа */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-main);
+    font-size: 1rem;
+    outline: none;
+}
+
+input:focus, select:focus {
+    border-color: var(--accent);
+}
+
+.btn {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn:hover {
+    background-color: var(--accent-hover);
+}
+
+.btn-secondary {
+    background-color: #2a2f3d;
+    margin-top: 10px;
+}
+
+.btn-secondary:hover {
+    background-color: #383f52;
+}
+
+/* Экран теста */
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.question-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.option-btn {
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 14px 18px;
+    border-radius: 8px;
+    text-align: left;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.option-btn:hover {
+    border-color: var(--accent);
+    background-color: rgba(230, 57, 70, 0.1);
+}
+
+/* Экран результатов */
+.result-box {
+    text-align: center;
+}
+
+.score {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin: 15px 0;
+}
+
+.status-text {
+    color: var(--text-muted);
+}
+
+.report-card {
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px;
+    text-align: left;
+    font-family: monospace;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin: 20px 0;
+    white-space: pre-wrap;
+}
+
+footer {
+    margin-top: auto;
+    padding-top: 30px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
