@@ -1,3 +1,7 @@
+// === ВСТАВЬТЕ ВАШУ ССЫЛКУ ИЗ GOOGLE APPS SCRIPT НИЖЕ ===
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyxXLbjh3sDZUA9tL4wV3hf0mICNi56zkv9XttIXkMvKyeLPhQUaL9zJkY1rlKtd4qmHA/exec"; 
+// ======================================================
+
 let currentQuestion = 0;
 let score = 0;
 let seconds = 0;
@@ -66,6 +70,7 @@ function selectChoiceAnswer(selectedIndex, optionText) {
     }
 
     userAnswers.push({
+        id: q.id,
         question: q.question,
         answer: optionText + mark
     });
@@ -83,6 +88,7 @@ function submitTextAnswer() {
     }
 
     userAnswers.push({
+        id: q.id,
         question: q.question,
         answer: textVal || "Не указано"
     });
@@ -99,7 +105,7 @@ function nextStep() {
     }
 }
 
-function finishQuiz() {
+async function finishQuiz() {
     clearInterval(timerInterval);
     document.getElementById("quiz-screen").classList.add("hidden");
     document.getElementById("result-screen").classList.remove("hidden");
@@ -108,16 +114,18 @@ function finishQuiz() {
     
     const minPassScore = 21;
     const passed = score >= minPassScore;
-    document.getElementById("result-status").textContent = passed 
-        ? "Тестовая часть пройдена! Скопируйте отчёт ниже и отправьте проверяющему для оценки ситуационных задач." 
-        : "Тестовая часть не пройдена (набрано меньше " + minPassScore + " баллов).";
-
+    const statusText = passed ? "ДОПУЩЕН К ПРОВЕРКЕ ЗАДАЧ" : "НЕ СДАНО";
     const timeSpent = document.getElementById("timer").textContent.replace("Время: ", "");
-    
+
+    // Достаем ник игрока из 4-го вопроса для отдельного столбца в таблице
+    const nickItem = userAnswers.find(item => item.id === "4");
+    const playerNick = nickItem ? nickItem.answer : "Не указан";
+
     let report = "=== ОТЧЁТ О ПРОХОЖДЕНИИ ТЕСТА В УСБ (05 СЕРВЕР) ===\n";
+    report += "Игрок: " + playerNick + "\n";
     report += "Результат тестовой части: " + score + " из " + totalGradable + " баллов\n";
     report += "Затрачено времени: " + timeSpent + "\n";
-    report += "Предварительный статус: " + (passed ? "ДОПУЩЕН К ПРОВЕРКЕ ЗАДАЧ" : "НЕ СДАНО") + "\n";
+    report += "Предварительный статус: " + statusText + "\n";
     report += "==================================================\n\n";
 
     userAnswers.forEach(item => {
@@ -125,11 +133,39 @@ function finishQuiz() {
     });
     
     document.getElementById("report-text").textContent = report;
+
+    // Отправка в Google Таблицу
+    if (GOOGLE_SHEET_URL) {
+        document.getElementById("result-status").textContent = "Сохраняем ваши ответы в таблицу УСБ...";
+        try {
+            await fetch(GOOGLE_SHEET_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "text/plain" },
+                body: JSON.stringify({
+                    nickname: playerNick,
+                    score: score + " / " + totalGradable,
+                    status: statusText,
+                    time: timeSpent,
+                    answers: userAnswers
+                })
+            });
+            document.getElementById("result-status").textContent = passed 
+                ? "Тестовая часть пройдена! Ваши ответы автоматически записаны в таблицу проверяющих." 
+                : "Тест завершён (набрано меньше " + minPassScore + " баллов). Результат записан в таблицу.";
+        } catch (e) {
+            document.getElementById("result-status").textContent = "Не удалось отправить автоматически. Скопируйте отчёт ниже и отправьте проверяющему вручную.";
+        }
+    } else {
+        document.getElementById("result-status").textContent = passed 
+            ? "Тестовая часть пройдена! Скопируйте отчёт ниже и отправьте проверяющему." 
+            : "Тестовая часть не пройдена (набрано меньше " + minPassScore + " баллов).";
+    }
 }
 
 function copyReport() {
     const text = document.getElementById("report-text").textContent;
     navigator.clipboard.writeText(text).then(() => {
-        alert("Полный отчёт со всеми ответами скопирован! Вставьте его в сообщение проверяющему.");
+        alert("Полный отчёт со всеми ответами скопирован!");
     });
 }
